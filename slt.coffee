@@ -1,8 +1,13 @@
 window = @
+document = window.document
 ua = navigator.userAgent
 isIe = !-[1,]
 # 私有方法
 unit = 
+	extend: (destination, source) ->
+		for k of source
+			destination[k] = source[k]
+		return destination
 	on: (element, type, handler) ->
 		if element.addEventListener
 			element.addEventListener type, handler, false
@@ -34,4 +39,30 @@ unit =
 		)
 		return
 
-window.selectTxt = unit.selectTxt
+Slt = (opts) ->
+	@toolBarClass = opts.toolBarClass
+
+
+Slt:: = 
+	createMenu: ->
+		icons = ''
+		for name in @list
+			icons += '<i class="icon-' + name + '" data-action="' + name + '">'
+
+		menu = document.createElement 'div'
+		menu.setAttribute 'class', @toolBarClass + '-menu'
+		menu.innerHTML = icons;
+		menu.style.display = 'none';
+
+		document.body.appendChild menu
+
+# 默认参数
+defultConfig = 
+	toolBarClass: 'slt'
+	list: [
+		'p'
+	]
+
+window.slt = (opts) ->
+	opts = extend defultConfig, opts
+	new Slt opts
